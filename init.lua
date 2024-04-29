@@ -19,7 +19,7 @@ vim.g.have_nerd_font = false
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -109,6 +109,10 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+
+-- Tab Keymaps
+vim.keymap.set('n', 'tn', ':tabn<CR>', { desc = 'Switch to next tab' })
+vim.keymap.set('n', 'tp', ':tabp<CR>', { desc = 'Switch to next tab' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -484,8 +488,12 @@ require('lazy').setup({
                             completion = {
                                 callSnippet = 'Replace',
                             },
+                            telemetry = { enable = false },
+                            library = {
+                                '${3rd}/love2d/library',
+                            },
                             -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-                            -- diagnostics = { disable = { 'missing-fields' } },
+                            diagnostics = { disable = { 'missing-fields' } },
                         },
                     },
                 },
@@ -688,6 +696,22 @@ require('lazy').setup({
         event = 'VimEnter',
         dependencies = { 'nvim-lua/plenary.nvim' },
         opts = { signs = false },
+    },
+    -- Love2D Highlighting and Docs
+    {
+        'davisdude/vim-love-docs',
+    },
+
+    -- Love2D Support
+    {
+        'S1M0N38/love2d.nvim',
+        cmd = 'LoveRun',
+        opts = {},
+        keys = {
+            { '<leader>v', desc = 'LOVE' },
+            { '<leader>vv', '<cmd>LoveRun<cr>', desc = 'Run LOVE' },
+            { '<leader>vs', '<cmd>LoveStop<cr>', desc = 'Stop LOVE' },
+        },
     },
 
     { -- Collection of various small independent plugins/modules
