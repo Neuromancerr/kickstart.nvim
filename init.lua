@@ -7,6 +7,13 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+--Disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+--Enable 24-bit color
+vim.opt.termguicolors = true
+
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
 
@@ -752,6 +759,19 @@ require('lazy').setup({
 			--    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
 			--    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
 			--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+		end,
+	},
+
+	--Nvim Tree Devicons
+	{ 'nvim-tree/nvim-web-devicons', opts = {} },
+
+	{
+		'nvim-tree/nvim-tree.lua',
+		version = '*',
+		lazy = false,
+		dependencies = { 'nvim-tree/nvim-web-devicons' },
+		config = function()
+			require('nvim-tree').setup {}
 		end,
 	},
 
