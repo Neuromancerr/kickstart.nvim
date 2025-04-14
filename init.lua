@@ -24,8 +24,8 @@ vim.g.have_nerd_font = true
 
 -- Make line numbers default
 vim.opt.number = true
--- You can also add relative line numbers, to help with jumping.
---  Experiment for yourself to see if you like it!
+
+--Relative Line Numbers
 vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
@@ -79,9 +79,9 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 vim.o.tabstop = 4
-vim.o.shiftwidth = 5
+vim.o.shiftwidth = 0
 
--- [[ Basic Keymaps ]]
+--[[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
@@ -466,7 +466,7 @@ require('lazy').setup({
 			local servers = {
 				clangd = {},
 				-- gopls = {},
-				-- pyright = {},
+				pyright = {},
 				-- rust_analyzer = {},
 				-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 				--
@@ -496,6 +496,10 @@ require('lazy').setup({
 						},
 					},
 				},
+				cssls = {
+					css = { validate = true },
+				},
+				html = {},
 			}
 
 			-- Ensure the servers and tools above are installed
@@ -586,12 +590,12 @@ require('lazy').setup({
 					-- `friendly-snippets` contains a variety of premade snippets.
 					--    See the README about individual language/framework/plugin snippets:
 					--    https://github.com/rafamadriz/friendly-snippets
-					-- {
-					--   'rafamadriz/friendly-snippets',
-					--   config = function()
-					--     require('luasnip.loaders.from_vscode').lazy_load()
-					--   end,
-					-- },
+					{
+						'rafamadriz/friendly-snippets',
+						config = function()
+							require('luasnip.loaders.from_vscode').lazy_load()
+						end,
+					},
 				},
 			},
 			'saadparwaiz1/cmp_luasnip',
@@ -671,28 +675,20 @@ require('lazy').setup({
 		end,
 	},
 
-	{ -- You can easily change to a different colorscheme.
-		-- Change the name of the colorscheme plugin below, and then
-		-- change the command in the config to whatever the name of that colorscheme is.
-		--
-		-- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-		'rebelot/kanagawa.nvim',
-		priority = 1000, -- Make sure to load this before all the other start plugins.
-		--init = function()
-		-- Load the colorscheme here.
-		-- Like many other themes, this one has different styles, and you could load
-		-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-		--vim.cmd.colorscheme 'kanagawa-dragon'
-
-		-- You can configure highlights by doing something like:
-		--vim.cmd.hi 'Comment gui=none'
-		--end,
+	{
+		'hrsh7th/cmp-buffer',
 	},
 
+	--NVIM Theme, Set to match transparency of terminal
 	{
 		'scottmckendry/cyberdream.nvim',
 		lazy = false,
 		priority = 1000,
+		config = function()
+			require('cyberdream').setup {
+				transparent = true,
+			}
+		end,
 		init = function()
 			vim.cmd.colorscheme 'cyberdream'
 		end,
@@ -765,6 +761,7 @@ require('lazy').setup({
 	--Nvim Tree Devicons
 	{ 'nvim-tree/nvim-web-devicons', opts = {} },
 
+	--Nvim Tree for file navigation, IDE-style
 	{
 		'nvim-tree/nvim-tree.lua',
 		version = '*',
