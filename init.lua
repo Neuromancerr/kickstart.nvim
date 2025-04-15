@@ -38,6 +38,26 @@ vim.opt.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 vim.opt.clipboard = 'unnamedplus'
+--WSL Clipboard
+if vim.fn.has 'wsl' == 1 then
+	if vim.fn.executable 'wl-copy' == 0 then
+		print "wl-clipboard not found, clipboard integration won't work"
+	else
+		vim.g.clipboard = {
+			name = 'wl-clipboard (wsl)',
+			copy = {
+				['+'] = 'wl-copy --foreground --type text/plain',
+				['*'] = 'wl-copy --foreground --primary --type text/plain',
+			},
+			paste = {
+				['*'] = function()
+					return vim.fn.systemlist('wl-paste --no-newline|sed -e "s/\r$//"', { '' }, 1)
+				end,
+			},
+			cache_enabled = true,
+		}
+	end
+end
 
 -- Enable break indent
 vim.opt.breakindent = true
