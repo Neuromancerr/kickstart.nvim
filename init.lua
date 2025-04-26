@@ -2,8 +2,6 @@
 -- ANDREW KOLKMEIER
 
 -- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
@@ -14,13 +12,11 @@ vim.g.loaded_netrwPlugin = 1
 --Enable 24-bit color
 vim.opt.termguicolors = true
 
--- Set to true if you have a Nerd Font installed
+-- Enable Nerd Font
 vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
--- NOTE: You can change these options as you wish!
---  For more options, you can see `:help option-list`
 
 -- Make line numbers default
 vim.opt.number = true
@@ -28,10 +24,10 @@ vim.opt.number = true
 --Relative Line Numbers
 vim.opt.relativenumber = true
 
--- Enable mouse mode, can be useful for resizing splits for example!
+-- Enable mouse mode
 vim.opt.mouse = 'a'
 
--- Don't show the mode, since it's already in the status line
+-- Don't show the mode
 vim.opt.showmode = false
 
 -- Sync clipboard between OS and Neovim.
@@ -91,7 +87,7 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 vim.o.tabstop = 4
-vim.o.shiftwidth = 0
+vim.o.shiftwidth = 4
 
 --[[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -107,17 +103,10 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagn
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
--- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
@@ -162,7 +151,6 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
-	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
 	'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
 	-- NOTE: Plugins can also be added by using a table,
@@ -181,7 +169,6 @@ require('lazy').setup({
 	-- options to `gitsigns.nvim`. This is equivalent to the following Lua:
 	--    require('gitsigns').setup({ ... })
 	--
-	-- See `:help gitsigns` to understand what the configuration keys do
 	{ -- Adds git related signs to the gutter, as well as utilities for managing changes
 		'lewis6991/gitsigns.nvim',
 		opts = {
@@ -196,19 +183,6 @@ require('lazy').setup({
 	},
 
 	-- NOTE: Plugins can also be configured to run Lua code when they are loaded.
-	--
-	-- This is often very useful to both group configuration, as well as handle
-	-- lazy loading plugins that don't need to be loaded immediately at startup.
-	--
-	-- For example, in the following configuration, we use:
-	--  event = 'VimEnter'
-	--
-	-- which loads which-key before all the UI elements are loaded. Events can be
-	-- normal autocommands events (`:help autocmd-events`).
-	--
-	-- Then, because we use the `config` key, the configuration only runs
-	-- after the plugin has been loaded:
-	--  config = function() ... end
 
 	{ -- Useful plugin to show you pending keybinds.
 		'folke/which-key.nvim',
@@ -253,24 +227,6 @@ require('lazy').setup({
 			-- Telescope is a fuzzy finder that comes with a lot of different things that
 			-- it can fuzzy find! It's more than just a "file finder", it can search
 			-- many different aspects of Neovim, your workspace, LSP, and more!
-			--
-			-- The easiest way to use Telescope, is to start by doing something like:
-			--  :Telescope help_tags
-			--
-			-- After running this command, a window will open up and you're able to
-			-- type in the prompt window. You'll see a list of `help_tags` options and
-			-- a corresponding preview of the help.
-			--
-			-- Two important keymaps to use while in Telescope are:
-			--  - Insert mode: <c-/>
-			--  - Normal mode: ?
-			--
-			-- This opens a window that shows you all of the keymaps for the current
-			-- Telescope picker. This is really useful to discover what Telescope can
-			-- do as well as how to actually do it!
-
-			-- [[ Configure Telescope ]]
-			-- See `:help telescope` and `:help telescope.setup()`
 			require('telescope').setup {
 				-- You can put your default mappings / updates / etc. in here
 				--  All the info you're looking for is in `:help telescope.setup()`
@@ -454,13 +410,8 @@ require('lazy').setup({
 				-- Some languages (like typescript) have entire language plugins that can be useful:
 				--    https://github.com/pmizio/typescript-tools.nvim
 				--
-				-- But for many setups, the LSP (`tsserver`) will work just fine
-				ts_ls = {
-					capabilities = capabilities,
-				},
-				angularls = {
-					capabilities = capabilities,
-				},
+				ts_ls = {},
+				angularls = {},
 				lua_ls = {
 					-- cmd = {...},
 					-- filetypes = { ...},
@@ -480,12 +431,9 @@ require('lazy').setup({
 					},
 				},
 				cssls = {
-					capabilities = capabilities,
 					css = { validate = true },
 				},
-				html = {
-					capabilities = capabilities,
-				},
+				html = {},
 			}
 
 			-- Ensure the servers and tools above are installed
@@ -569,9 +517,9 @@ require('lazy').setup({
 				end)(),
 				dependencies = {
 					'rafamadriz/friendly-snippets',
-					'saadparwaiz1/cmp_luasnip',
 				},
 			},
+			'saadparwaiz1/cmp_luasnip',
 			'hrsh7th/cmp-nvim-lsp',
 			'hrsh7th/cmp-path',
 		},
@@ -682,9 +630,6 @@ require('lazy').setup({
 			require('mini.surround').setup()
 
 			require('mini.statusline').setup()
-
-			-- ... and there is more!
-			--  Check out: https://github.com/echasnovski/mini.nvim
 		end,
 	},
 
@@ -697,9 +642,6 @@ require('lazy').setup({
 			auto_install = true,
 			highlight = {
 				enable = true,
-				-- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-				--  If you are experiencing weird indenting issues, add the language to
-				--  the list of additional_vim_regex_highlighting and disabled languages for indent.
 				additional_vim_regex_highlighting = { 'ruby' },
 			},
 			indent = { enable = true, disable = { 'ruby' } },
@@ -709,18 +651,11 @@ require('lazy').setup({
 
 			---@diagnostic disable-next-line: missing-fields
 			require('nvim-treesitter.configs').setup(opts)
-
-			-- There are additional nvim-treesitter modules that you can use to interact
-			-- with nvim-treesitter. You should go explore a few and see what interests you:
-			--
-			--    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-			--    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-			--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 		end,
 	},
 
 	--Nvim Tree Devicons
-	{ 'nvim-tree/nvim-web-devicons', opts = {} },
+	--{ 'nvim-tree/nvim-web-devicons', opts = {} },
 
 	--Nvim Tree for file navigation, IDE-style
 	{
