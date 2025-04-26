@@ -35,8 +35,6 @@ vim.opt.mouse = 'a'
 vim.opt.showmode = false
 
 -- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
 vim.opt.clipboard = 'unnamedplus'
 --WSL Clipboard
 if vim.fn.has 'wsl' == 1 then
@@ -115,12 +113,6 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
-
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -355,31 +347,6 @@ require('lazy').setup({
 			{ 'folke/neodev.nvim', opts = {} },
 		},
 		config = function()
-			-- Brief aside: **What is LSP?**
-			--
-			-- LSP is an initialism you've probably heard, but might not understand what it is.
-			--
-			-- LSP stands for Language Server Protocol. It's a protocol that helps editors
-			-- and language tooling communicate in a standardized fashion.
-			--
-			-- In general, you have a "server" which is some tool built to understand a particular
-			-- language (such as `gopls`, `lua_ls`, `rust_analyzer`, etc.). These Language Servers
-			-- (sometimes called LSP servers, but that's kind of like ATM Machine) are standalone
-			-- processes that communicate with some "client" - in this case, Neovim!
-			--
-			-- LSP provides Neovim with features like:
-			--  - Go to definition
-			--  - Find references
-			--  - Autocompletion
-			--  - Symbol Search
-			--  - and more!
-			--
-			-- Thus, Language Servers are external tools that must be installed separately from
-			-- Neovim. This is where `mason` and related plugins come into play.
-			--
-			-- If you're wondering about lsp vs treesitter, you can check out the wonderfully
-			-- and elegantly composed help section, `:help lsp-vs-treesitter`
-
 			--  This function gets run when an LSP attaches to a particular buffer.
 			--    That is to say, every time a new file is opened that is associated with
 			--    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
@@ -488,10 +455,12 @@ require('lazy').setup({
 				--    https://github.com/pmizio/typescript-tools.nvim
 				--
 				-- But for many setups, the LSP (`tsserver`) will work just fine
-				ts_ls = {},
-				angularls = {},
-				--
-
+				ts_ls = {
+					capabilities = capabilities,
+				},
+				angularls = {
+					capabilities = capabilities,
+				},
 				lua_ls = {
 					-- cmd = {...},
 					-- filetypes = { ...},
@@ -511,9 +480,12 @@ require('lazy').setup({
 					},
 				},
 				cssls = {
+					capabilities = capabilities,
 					css = { validate = true },
 				},
-				html = {},
+				html = {
+					capabilities = capabilities,
+				},
 			}
 
 			-- Ensure the servers and tools above are installed
@@ -593,30 +565,13 @@ require('lazy').setup({
 				'L3MON4D3/LuaSnip',
 				build = (function()
 					-- Build Step is needed for regex support in snippets.
-					-- This step is not supported in many windows environments.
-					-- Remove the below condition to re-enable on windows.
-					if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-						return
-					end
 					return 'make install_jsregexp'
 				end)(),
 				dependencies = {
-					-- `friendly-snippets` contains a variety of premade snippets.
-					--    See the README about individual language/framework/plugin snippets:
-					--    https://github.com/rafamadriz/friendly-snippets
-					{
-						'rafamadriz/friendly-snippets',
-						config = function()
-							require('luasnip.loaders.from_vscode').lazy_load()
-						end,
-					},
+					'rafamadriz/friendly-snippets',
+					'saadparwaiz1/cmp_luasnip',
 				},
 			},
-			'saadparwaiz1/cmp_luasnip',
-
-			-- Adds other completion capabilities.
-			--  nvim-cmp does not ship with all sources by default. They are split
-			--  into multiple repos for maintenance purposes.
 			'hrsh7th/cmp-nvim-lsp',
 			'hrsh7th/cmp-path',
 		},
@@ -624,6 +579,7 @@ require('lazy').setup({
 			-- See `:help cmp`
 			local cmp = require 'cmp'
 			local luasnip = require 'luasnip'
+			require('luasnip.loaders.from_vscode').lazy_load()
 			luasnip.config.setup {}
 
 			cmp.setup {
@@ -633,31 +589,22 @@ require('lazy').setup({
 					end,
 				},
 				completion = { completeopt = 'menu,menuone,noinsert' },
-
-				-- For an understanding of why these mappings were
-				-- chosen, you will need to read `:help ins-completion`
-				--
-				-- No, but seriously. Please read `:help ins-completion`, it is really good!
 				mapping = cmp.mapping.preset.insert {
 					-- Select the [n]ext item
 					['<C-n>'] = cmp.mapping.select_next_item(),
 					-- Select the [p]revious item
 					['<C-p>'] = cmp.mapping.select_prev_item(),
-
 					-- Scroll the documentation window [b]ack / [f]orward
 					['<C-b>'] = cmp.mapping.scroll_docs(-4),
 					['<C-f>'] = cmp.mapping.scroll_docs(4),
-
 					-- Accept ([y]es) the completion.
 					--  This will auto-import if your LSP supports it.
 					--  This will expand snippets if the LSP sent a snippet.
 					['<C-y>'] = cmp.mapping.confirm { select = true },
-
 					-- Manually trigger a completion from nvim-cmp.
 					--  Generally you don't need this, because nvim-cmp will display
 					--  completions whenever it has completion options available.
 					['<C-Space>'] = cmp.mapping.complete {},
-
 					-- Think of <c-l> as moving to the right of your snippet expansion.
 					--  So if you have a snippet that's like:
 					--  function $name($args)
