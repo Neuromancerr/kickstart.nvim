@@ -8,7 +8,7 @@ return --NVIM Theme, Set to match transparency of terminal
 			transparent = true,
 		}
 	end,
-	init = function()
-		vim.cmd.colorscheme 'cyberdream'
-	end,
+	-- init = function()
+	-- 	vim.cmd.colorscheme 'cyberdream'
+	-- end,
 }

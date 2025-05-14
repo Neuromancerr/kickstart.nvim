@@ -12,7 +12,16 @@ return { -- LSP Configuration & Plugins
 
 		-- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
 		-- used for completion, annotations and signatures of Neovim apis
-		{ 'folke/neodev.nvim', opts = {} },
+		{
+			'folke/lazydev.nvim',
+			ft = 'lua',
+			opts = {
+				library = {
+					'lazy.nvim',
+					'LazyVim',
+				},
+			},
+		},
 	},
 	config = function()
 		--  This function gets run when an LSP attaches to a particular buffer.
@@ -130,11 +139,8 @@ return { -- LSP Configuration & Plugins
 							callSnippet = 'Replace',
 						},
 						telemetry = { enable = false },
-						library = {
-							'${3rd}/love2d/library',
-						},
 						-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-						diagnostics = { disable = { 'missing-fields' } },
+						diagnostics = { disable = { 'missing-fields' }, globals = { 'vim' } },
 					},
 				},
 			},
