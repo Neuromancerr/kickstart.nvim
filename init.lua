@@ -86,8 +86,16 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Tab Width
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
+
+-- Turn off line wrapping
+vim.opt.wrap = false
+
+-- Indention
+vim.opt.smartindent = true
+vim.opt.autoindent = true
 
 --[[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
