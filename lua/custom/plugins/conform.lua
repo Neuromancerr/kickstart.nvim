@@ -34,5 +34,10 @@ return { -- Autoformat
 			c = { 'clang_format' },
 			cpp = { 'clang_format' },
 		},
+		formatters = {
+			clang_format = {
+				prepend_args = { '--style=file', '--fallback-style=LLVM' },
+			},
+		},
 	},
 }
