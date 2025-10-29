@@ -131,6 +131,7 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 vim.keymap.set('n', 'tn', ':tabn<CR>', { desc = 'Switch to next tab' })
 vim.keymap.set('n', 'tp', ':tabp<CR>', { desc = 'Switch to next tab' })
 vim.keymap.set('n', 'ta', ':tabnew<CR>', { desc = 'Create new tab after current tab' })
+vim.keymap.set('n', 'tc', ':tabclose<CR>', { desc = 'Close current tab' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
