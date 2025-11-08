@@ -2,8 +2,8 @@ return { -- LSP Configuration & Plugins
 	'neovim/nvim-lspconfig',
 	dependencies = {
 		-- Automatically install LSPs and related tools to stdpath for Neovim
-		'williamboman/mason.nvim',
-		'williamboman/mason-lspconfig.nvim',
+		'mason-org/mason.nvim',
+		'mason-org/mason-lspconfig.nvim',
 		'WhoIsSethDaniel/mason-tool-installer.nvim',
 
 		-- Useful status updates for LSP.
@@ -178,5 +178,16 @@ return { -- LSP Configuration & Plugins
 				end,
 			},
 		}
+
+		local ngcmd = {
+			'ngserver',
+			'--stdio',
+			'--tsProbeLocations',
+			'/usr/local/lib/node_modules/typescript/lib',
+			'--ngProbeLocations',
+			'/usr/local/lib/node_modules/@angular/language-server/bin',
+		}
+		vim.lsp.config('angularls', { cmd = ngcmd })
+		vim.lsp.enable 'angularls'
 	end,
 }
